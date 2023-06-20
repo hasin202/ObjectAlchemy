@@ -1,0 +1,23 @@
+{
+  "name": "objectalchemy",
+  "version": "1.0.0",
+  "description": "test commit account",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hasin202/ObjectAlchemy.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hasin202/ObjectAlchemy/issues"
+  },
+  "homepage": "https://github.com/hasin202/ObjectAlchemy#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
