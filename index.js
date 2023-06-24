@@ -14,24 +14,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.get("/", async (req, res) => {
-  const { data, error } = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: [
-      {
-        role: "system",
-        content:
-          "You are an expert data creator. Given an example schema you return a valid array of n just JSON objects (where n is defined by the user). For each property of the passed in object give it a relavent value. For example, if a property is name its value could be 'bob roberts' and if there is another property called ID it could be given the value '34532' etc. Only return the JSON value and no other strings or information",
-      },
-      {
-        role: "user",
-        content:
-          "object: {age:int,name:string,school:string, subjects: [{subject:string, subject:string, subject:string}]} number of objects: 5",
-      },
-    ],
-  });
-  const parsedData = JSON.parse(data.choices[0].message.content);
-
-  res.send(parsedData);
+  res.send(
+    "Oops. Looks like you sent a GET request. Please try again with a POST request instead."
+  );
 });
 
 app.post("/", async (req, res) => {
@@ -43,8 +28,10 @@ app.post("/", async (req, res) => {
     messages: [
       {
         role: "system",
-        content:
-          "You are an expert data creator. Given an example schema you return a valid array of n just JSON objects (where n is defined by the user). For each property of the passed in object give it a relavent value. For example, if a property is name its value could be 'bob roberts' and if there is another property called ID it could be given the value '34532' etc. Only return the JSON value and no other strings or information",
+        content: `You are an expert data creator. Given an example schema you return a valid array of n just JSON objects 
+          (where n is defined by the user). For each property of the passed in object give it a relavent value. 
+          For example, if a property is name its value could be 'bob roberts' and if there is another property called 
+          ID it could be given the value '34532' etc. Only return the JSON value and no other strings or information`,
       },
       {
         role: "user",
@@ -57,8 +44,6 @@ app.post("/", async (req, res) => {
   const startIndex = response.indexOf("[");
   const endIndex = response.lastIndexOf("]") + 1;
   const json = response.slice(startIndex, endIndex);
-
-  console.log(response);
 
   res.send(JSON.parse(json));
 });
