@@ -41,6 +41,7 @@ app.post("/", async (req, res) => {
       ],
     });
 
+    //.match is used to ensure that only JSON is returned as in the response the JSON is always between [....]
     const json = data.choices[0].message.content.match(/\[.*\]/s);
     res.send(JSON.parse(json));
   } catch (error) {
