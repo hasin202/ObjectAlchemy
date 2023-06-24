@@ -40,12 +40,8 @@ app.post("/", async (req, res) => {
         },
       ],
     });
-    const response = data.choices[0].message.content;
-    //Sometimes some of the responses still include other info and I cant figure out why so this ensures that the response is JSON
-    const startIndex = response.indexOf("[");
-    const endIndex = response.lastIndexOf("]") + 1;
-    const json = response.slice(startIndex, endIndex);
 
+    const json = data.choices[0].message.content.match(/\[.*\]/s);
     res.send(JSON.parse(json));
   } catch (error) {
     res.status(400).send("Something went wrong. Please try again");
