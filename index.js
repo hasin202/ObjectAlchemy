@@ -1,6 +1,7 @@
 require("dotenv").config();
 const { Configuration, OpenAIApi } = require("openai");
 const express = require("express");
+const cors = require("cors");
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -12,6 +13,7 @@ const PORT = 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cors());
 
 app.get("/", async (req, res) => {
   res.send(
@@ -29,20 +31,24 @@ app.post("/", async (req, res) => {
       messages: [
         {
           role: "system",
-          content: `You are an expert data creator. Given an example schema you return a valid array of n just JSON objects 
-            (where n is defined by the user). For each property of the passed in object give it a relavent value. 
-            For example, if a property is name its value could be 'bob roberts' and if there is another property called 
-            ID it could be given the value '34532' etc. Only return the JSON value and no other strings or information`,
+          content: `As a skilled data creator, your task is to generate a valid array of n JSON objects
+          based on a given example schema. The value of each property in the input object should
+          be relevant to its name. For instance, if a property is named "name," you could assign
+          the value 'bob roberts,' and if another property is called "ID," it could be assigned the value
+          '34532,' and so on. Please ensure that you only include the JSON values in your output and no
+          additional strings or information. If a property is an object with multiple child properties,
+          generate the same number of child properties accordingly.`,
         },
         {
           role: "user",
-          content: `object: ${obj} number of objects: ${number_of_objects} extra context: ${extra_info}`,
+          content: `object: ${obj} number of objects: ${number_of_objects} extra context: ${extra_info}. 
+          Note: Don't change any of the property names passed in with the schema`,
         },
       ],
     });
-
     //.match is used to ensure that only JSON is returned as in the response the JSON is always between [....]
     const json = data.choices[0].message.content.match(/\[.*\]/s);
+    console.log(prompt);
     res.send(JSON.parse(json));
   } catch (error) {
     res.status(400).send("Something went wrong. Please try again");
