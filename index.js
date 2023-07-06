@@ -1,9 +1,8 @@
 const express = require("express");
 const cors = require("cors");
+const openai = require("./openai-api/openai");
 const generateJSONObjects = require("./dataCreator");
-const imgPromptMessage = require("./prompt-messages/imgPrompt");
-
-const openai = require("./openai-api/openai.js");
+const generateImgPrompt = require("./imgPrompt");
 
 const app = express();
 const PORT = 3000;
@@ -35,6 +34,7 @@ app.post("/", async (req, res) => {
 
 app.post("/img", async (req, res) => {
   const { object, number_of_objects, extra_info } = req.body;
+
   const jsonObjects = await generateJSONObjects(
     object,
     number_of_objects,
@@ -43,25 +43,12 @@ app.post("/img", async (req, res) => {
 
   console.log(jsonObjects);
 
-  const imgPrompts = Promise.all(
-    jsonObjects.map(async function (e) {
-      try {
-        const { data } = await openai.createChatCompletion({
-          model: "gpt-3.5-turbo",
-          messages: imgPromptMessage(e),
-        });
-        return data.choices[0].message.content;
-      } catch (error) {
-        console.log(error);
-      }
-    })
-  );
+  const imgPrompts = await generateImgPrompt(jsonObjects);
 
-  const allImgPrompts = await imgPrompts;
-  console.log(allImgPrompts);
+  console.log(imgPrompts);
 
   const list = Promise.all(
-    allImgPrompts.map(async function (e) {
+    imgPrompts.map(async function (e) {
       try {
         const response = await openai.createImage({
           prompt: e,
@@ -77,8 +64,7 @@ app.post("/img", async (req, res) => {
     })
   );
 
-  const all = await list;
-  res.send(all);
+  res.send(await list);
 });
 
 app.listen(PORT, () => {
