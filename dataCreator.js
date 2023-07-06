@@ -14,7 +14,9 @@ async function generateJSONObjects(object, numberOfObjects, extraInfo) {
     return JSON.parse(json);
   } catch (error) {
     console.log(error);
-    throw Error("Something went wrong. Please try again.");
+    throw Error(
+      "Something went wrong in generating the objects. Please try again."
+    );
   }
 }
 

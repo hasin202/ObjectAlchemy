@@ -14,7 +14,9 @@ const generateImgs = async (arr) => {
         return image_url;
       } catch (error) {
         console.log(error);
-        throw Error("Something went wrong. Please try again.");
+        throw Error(
+          "Something went wrong in generating the images. Please try again."
+        );
       }
     })
   );
