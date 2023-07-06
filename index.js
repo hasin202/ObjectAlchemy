@@ -36,27 +36,42 @@ app.post("/img", async (req, res) => {
   const { object, number_of_objects, extra_info } = req.body;
   let jsonObjects, imgPrompts, list;
 
+  // try {
+  //   jsonObjects = await generateJSONObjects(
+  //     object,
+  //     number_of_objects,
+  //     extra_info
+  //   );
+  // } catch (error) {
+  //   res.status(400).send(error.message);
+  // }
+
+  // console.log(jsonObjects);
+  // try {
+  //   imgPrompts = await generateImgPrompt(jsonObjects);
+  // } catch (error) {
+  //   res.status(400).send(error.message);
+  // }
+
+  // console.log(imgPrompts);
+
+  // try {
+  //   list = await generateImgs(imgPrompts);
+  // } catch (error) {
+  //   res.status(400).send(error.message);
+  // }
+
   try {
-    jsonObjects = await generateJSONObjects(
+    const jsonObjects = await generateJSONObjects(
       object,
       number_of_objects,
       extra_info
     );
-  } catch (error) {
-    res.status(400).send(error.message);
-  }
+    const imgPrompts = await generateImgPrompt(jsonObjects);
+    const list = await generateImgs(imgPrompts);
 
-  console.log(jsonObjects);
-  try {
-    imgPrompts = await generateImgPrompt(jsonObjects);
-  } catch (error) {
-    res.status(400).send(error.message);
-  }
-
-  console.log(imgPrompts);
-
-  try {
-    list = await generateImgs(imgPrompts);
+    console.log(list); // Or use the list for further processing
+    res.send(list);
   } catch (error) {
     res.status(400).send(error.message);
   }
