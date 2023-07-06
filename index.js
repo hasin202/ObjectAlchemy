@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const openai = require("./openai-api/openai");
 const generateJSONObjects = require("./dataCreator");
 const generateImgPrompt = require("./imgPrompt");
 const generateImgs = require("./imgGeneration");
