@@ -34,73 +34,117 @@ app.post("/", async (req, res) => {
 app.post("/img", async (req, res) => {
   const objs = [
     {
-      id: "b64db70b-0179-4f79-9f8a-8a6c0a0f80c5",
-      item_image: "Image",
-      date: "2023-09-10",
-      time: "14:30:00",
-      inCart: true,
-      itemName: "Shirt",
-      price: 19.99,
-      quantity: 1,
-      tags: ["clothing", "fashion"],
+      appearance_img: "Image",
+      name: "Superman",
+      alias: "Clark Kent",
+      superpowers: [
+        "Super strength",
+        "Flying",
+        "Invulnerability",
+        "Heat vision",
+      ],
+      origin: "Krypton",
+      team_affiliation: "Justice League",
+      appearance: {
+        height: "Tall",
+        weight: "Muscular",
+        hair_color: "Black",
+        eye_color: "Blue",
+      },
+      costume: {
+        colors: ["Red", "Blue"],
+        symbol: "S",
+        design: "Cape",
+      },
+      arch_nemesis: "Lex Luthor",
     },
     {
-      id: "3e72e7f7-8a4d-4bed-a75b-2eb3e57917b8",
-      item_image: "Image",
-      date: "2023-09-11",
-      time: "09:45:00",
-      inCart: true,
-      itemName: "Jeans",
-      price: 49.99,
-      quantity: 1,
-      tags: ["clothing", "denim"],
+      appearance_img: "Image",
+      name: "Wonder Woman",
+      alias: "Diana Prince",
+      superpowers: [
+        "Superhuman strength",
+        "Lasso of Truth",
+        "Flight",
+        "Immortality",
+      ],
+      origin: "Themyscira",
+      team_affiliation: "Justice League",
+      appearance: {
+        height: "Tall",
+        weight: "Athletic",
+        hair_color: "Black",
+        eye_color: "Blue",
+      },
+      costume: {
+        colors: ["Red", "Gold"],
+        symbol: "W",
+        design: "Tiara",
+      },
+      arch_nemesis: "Cheetah",
     },
     {
-      id: "7dc69756-7c0e-4a3e-bb6a-4b45b4c2107d",
-      item_image: "Image",
-      date: "2023-09-12",
-      time: "16:15:00",
-      inCart: true,
-      itemName: "Shoes",
-      price: 79.99,
-      quantity: 1,
-      tags: ["footwear", "fashion"],
-    },
-    {
-      id: "d483086c-3049-43bb-95f9-e5ede51a45b7",
-      item_image: "Image",
-      date: "2023-09-13",
-      time: "12:00:00",
-      inCart: true,
-      itemName: "Hat",
-      price: 29.99,
-      quantity: 1,
-      tags: ["accessory", "headwear"],
-    },
-    {
-      id: "902a7a42-5ce0-4df1-b259-63b13a1178b8",
-      item_image: "Image",
-      date: "2023-09-14",
-      time: "18:30:00",
-      inCart: true,
-      itemName: "Socks",
-      price: 9.99,
-      quantity: 1,
-      tags: ["clothing", "footwear"],
+      appearance_img: "Image",
+      name: "Batman",
+      alias: "Bruce Wayne",
+      superpowers: ["Intelligence", "Combat skills", "Wealth", "Gadgets"],
+      origin: "Gotham City",
+      team_affiliation: "Justice League",
+      appearance: {
+        height: "Tall",
+        weight: "Muscular",
+        hair_color: "Black",
+        eye_color: "Blue",
+      },
+      costume: {
+        colors: ["Black", "Yellow"],
+        symbol: "Bat",
+        design: "Cape",
+      },
+      arch_nemesis: "Joker",
     },
   ];
 
-  const list = Promise.all(
+  const imgPrompts = Promise.all(
     objs.map(async function (e) {
       try {
+        const { data } = await openai.createChatCompletion({
+          model: "gpt-3.5-turbo",
+          messages: [
+            {
+              role: "system",
+              content: `You are an expert prompt generator for DALLE, an image generation API. Given a JSON object you
+                        can construct relevant images. I dont want any extra information at all, all I want is the prompt.
+                        For example, I don't need to know that the prompt might generate an image that doesn't fully meet
+                        the description`,
+            },
+            {
+              role: "user",
+              content: `Given the following object
+                        ${JSON.stringify(e)}
+                        Using information that you deem relevant, from the object, for generating a detailed image give me a prompt that when given to DALLE should generate me
+                        a relevant image`,
+            },
+          ],
+        });
+        return data.choices[0].message.content;
+      } catch (error) {
+        console.log(error);
+      }
+    })
+  );
+
+  const allImgPrompts = await imgPrompts;
+
+  const list = Promise.all(
+    allImgPrompts.map(async function (e) {
+      try {
         const response = await openai.createImage({
-          prompt: `Given the following object generate a relevant image for the property that has the value "Image".
-                  Take special note of the properties and their values in the provided object to help with defining features.
-                  The image should be of the product described in the object on a plain colored background. Sigma 85 mm f/1.4
-          ${JSON.stringify(e)}`,
+          prompt: e,
           n: 1,
           size: "1024x1024",
         });
+
         image_url = response.data.data[0].url;
         return image_url;
       } catch (error) {
@@ -110,7 +154,7 @@ app.post("/img", async (req, res) => {
   );
 
   const all = await list;
-  res.json(all);
+  res.send(all);
 });
 
 app.listen(PORT, () => {
