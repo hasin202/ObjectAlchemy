@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const generateJSONObjects = require("./dataCreator");
+const imgPromptMessage = require("./prompt-messages/imgPrompt");
+
 const openai = require("./openai-api/openai.js");
 
 const app = express();
@@ -32,100 +34,21 @@ app.post("/", async (req, res) => {
 });
 
 app.post("/img", async (req, res) => {
-  const objs = [
-    {
-      appearance_img: "Image",
-      name: "Superman",
-      alias: "Clark Kent",
-      superpowers: [
-        "Super strength",
-        "Flying",
-        "Invulnerability",
-        "Heat vision",
-      ],
-      origin: "Krypton",
-      team_affiliation: "Justice League",
-      appearance: {
-        height: "Tall",
-        weight: "Muscular",
-        hair_color: "Black",
-        eye_color: "Blue",
-      },
-      costume: {
-        colors: ["Red", "Blue"],
-        symbol: "S",
-        design: "Cape",
-      },
-      arch_nemesis: "Lex Luthor",
-    },
-    {
-      appearance_img: "Image",
-      name: "Wonder Woman",
-      alias: "Diana Prince",
-      superpowers: [
-        "Superhuman strength",
-        "Lasso of Truth",
-        "Flight",
-        "Immortality",
-      ],
-      origin: "Themyscira",
-      team_affiliation: "Justice League",
-      appearance: {
-        height: "Tall",
-        weight: "Athletic",
-        hair_color: "Black",
-        eye_color: "Blue",
-      },
-      costume: {
-        colors: ["Red", "Gold"],
-        symbol: "W",
-        design: "Tiara",
-      },
-      arch_nemesis: "Cheetah",
-    },
-    {
-      appearance_img: "Image",
-      name: "Batman",
-      alias: "Bruce Wayne",
-      superpowers: ["Intelligence", "Combat skills", "Wealth", "Gadgets"],
-      origin: "Gotham City",
-      team_affiliation: "Justice League",
-      appearance: {
-        height: "Tall",
-        weight: "Muscular",
-        hair_color: "Black",
-        eye_color: "Blue",
-      },
-      costume: {
-        colors: ["Black", "Yellow"],
-        symbol: "Bat",
-        design: "Cape",
-      },
-      arch_nemesis: "Joker",
-    },
-  ];
+  const { object, number_of_objects, extra_info } = req.body;
+  const jsonObjects = await generateJSONObjects(
+    object,
+    number_of_objects,
+    extra_info
+  );
+
+  console.log(jsonObjects);
 
   const imgPrompts = Promise.all(
-    objs.map(async function (e) {
+    jsonObjects.map(async function (e) {
       try {
         const { data } = await openai.createChatCompletion({
           model: "gpt-3.5-turbo",
-          messages: [
-            {
-              role: "system",
-              content: `You are an expert prompt generator for DALLE, an image generation API. Given a JSON object you
-                        can construct relevant images. I dont want any extra information at all, all I want is the prompt.
-                        For example, I don't need to know that the prompt might generate an image that doesn't fully meet
-                        the description`,
-            },
-            {
-              role: "user",
-              content: `Given the following object
-                        ${JSON.stringify(e)}
-                        Using information that you deem relevant, from the object, for generating a detailed image give me a prompt that when given to DALLE should generate me
-                        a relevant image`,
-            },
-          ],
+          messages: imgPromptMessage(e),
         });
         return data.choices[0].message.content;
       } catch (error) {
@@ -135,6 +58,7 @@ app.post("/img", async (req, res) => {
   );
 
   const allImgPrompts = await imgPrompts;
+  console.log(allImgPrompts);
 
   const list = Promise.all(
     allImgPrompts.map(async function (e) {
