@@ -12,6 +12,7 @@ const generateImgPrompt = async (objects) => {
         return data.choices[0].message.content;
       } catch (error) {
         console.log(error);
+        throw Error("Something went wrong. Please try again.");
       }
     })
   );
