@@ -62,21 +62,32 @@ app.post("/img", async (req, res) => {
   // }
 
   try {
+    console.log("1");
     const jsonObjects = await generateJSONObjects(
       object,
       number_of_objects,
       extra_info
     );
+    console.log("2");
     const imgPrompts = await generateImgPrompt(jsonObjects);
+    console.log("3");
     const list = await generateImgs(imgPrompts);
+    console.log("4");
 
-    console.log(list); // Or use the list for further processing
-    res.send(list);
+    jsonObjects.map((obj, i) => {
+      for (let key in obj) {
+        if (obj[key] === "Image") {
+          obj[key] = list[i];
+          return obj;
+        }
+      }
+    });
+    res.send(jsonObjects);
   } catch (error) {
     res.status(400).send(error.message);
   }
 
-  res.send(await list);
+  // res.send(await list);
 });
 
 app.listen(PORT, () => {
