@@ -3,6 +3,7 @@ const cors = require("cors");
 const openai = require("./openai-api/openai");
 const generateJSONObjects = require("./dataCreator");
 const generateImgPrompt = require("./imgPrompt");
+const generateImgs = require("./imgGeneration");
 
 const app = express();
 const PORT = 3000;
@@ -34,35 +35,32 @@ app.post("/", async (req, res) => {
 
 app.post("/img", async (req, res) => {
   const { object, number_of_objects, extra_info } = req.body;
+  let jsonObjects, imgPrompts, list;
 
-  const jsonObjects = await generateJSONObjects(
-    object,
-    number_of_objects,
-    extra_info
-  );
+  try {
+    jsonObjects = await generateJSONObjects(
+      object,
+      number_of_objects,
+      extra_info
+    );
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
 
   console.log(jsonObjects);
-
-  const imgPrompts = await generateImgPrompt(jsonObjects);
+  try {
+    imgPrompts = await generateImgPrompt(jsonObjects);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
 
   console.log(imgPrompts);
 
-  const list = Promise.all(
-    imgPrompts.map(async function (e) {
-      try {
-        const response = await openai.createImage({
-          prompt: e,
-          n: 1,
-          size: "1024x1024",
-        });
-
-        image_url = response.data.data[0].url;
-        return image_url;
-      } catch (error) {
-        console.log(error);
-      }
-    })
-  );
+  try {
+    list = await generateImgs(imgPrompts);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
 
   res.send(await list);
 });
