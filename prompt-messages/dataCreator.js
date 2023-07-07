@@ -15,40 +15,70 @@ const dataCreatorMessage = (object, numberOfObjects, extraInfo) => {
                       input object:
       
                       {
-                        "id": "uuid",
-                        "item_image":"Image",
-                        "date": "calendar date",
-                        "time": "time of day",
-                        "inCart": true,
-                        "itemName": "string",
-                        "price": 0.0,
-                        "quantity": 0,
-                        "tags": [
-                           "string",
-                           "string",
-                           "string"
-                        ]
-                      },
-                      "number_of_objects":"5",
-                      "extra_info":"Each object is an item in an online shopping cart"
-                     }
+                        {
+                          "id": "uuid",
+                          "item_image":"Image",
+                          "date": "calendar date",
+                          "time": "time of day",
+                          "inCart": true,
+                          "itemName": "string",
+                          "price": 0.0,
+                          "quantity": 0,
+                          "tags": [
+                            "string",
+                            "string",
+                            "string"
+                          ]
+                        },
+                        "number_of_objects":"1",
+                        "extra_info":"Each object is an item in an online shopping cart"
+                      }
                     
                      You would return something like: 
                      {
-                      id: c182b196-ff4e-436b-8e9b-4a97923003f9,
-                      "item_image":"Image",
-                      date:  2023-06-22
-                      time: 19:23:27
-                      inCart: true
-                      itemName: "cat food"
-                      price: 6.50,
-                      quantity: 2
-                      tags: [
-                         "pet",
-                         "pet food",
-                         "furry friend",
-                      ]
-                   }`,
+                        id: c182b196-ff4e-436b-8e9b-4a97923003f9,
+                        "item_image":"Image",
+                        date:  2023-06-22
+                        time: 19:23:27
+                        inCart: true
+                        itemName: "cat food"
+                        price: 6.50,
+                        quantity: 2
+                        tags: [
+                          "pet",
+                          "pet food",
+                          "furry friend",
+                        ]
+                      }
+                   
+                  Another example given a different object as input is:
+                   
+                  {
+                    {
+                      "name": "String",
+                      "age":"Int"
+                    },
+                    "number_of_objects":"3",
+                    "extra_info":"Each object is representing information about a person"
+                  }
+
+                 You would return something like this:
+
+                  [
+                    {
+                      "name":"Aaron Paul",
+                      "Age": 42
+                    },
+                    {
+                      "name:"Bryan Cranston",
+                      "Age":58,
+                    }
+                    {
+                      "name":"Walter white",
+                      "Age": 58
+                    }
+                  ]
+                   `,
     },
     {
       role: "user",
