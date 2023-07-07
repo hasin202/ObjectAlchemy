@@ -9,8 +9,7 @@ async function generateJSONObjects(object, numberOfObjects, extraInfo) {
     });
 
     // Extract the JSON array from the response
-    const json = data.choices[0].message.content.match(/\[.*\]/s);
-
+    const json = data.choices[0].message.content;
     return JSON.parse(json);
   } catch (error) {
     console.log(error);
