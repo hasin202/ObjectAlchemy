@@ -35,30 +35,36 @@ app.post("/", async (req, res) => {
 app.post("/img", async (req, res) => {
   const { object, number_of_objects, extra_info } = req.body;
 
-  try {
-    console.log("1");
-    const jsonObjects = await generateJSONObjects(
-      object,
-      number_of_objects,
-      extra_info
-    );
-    console.log("2");
-    const imgPrompts = await generateImgPrompt(jsonObjects);
-    console.log(imgPrompts);
-    const list = await generateImgs(imgPrompts);
-    console.log("4");
+  if (number_of_objects > 8)
+    res
+      .status(400)
+      .send({ error: "Please make sure number of objects is less than 8." });
+  else {
+    try {
+      console.log("1");
+      const jsonObjects = await generateJSONObjects(
+        object,
+        number_of_objects,
+        extra_info
+      );
+      console.log("2");
+      const imgPrompts = await generateImgPrompt(jsonObjects);
+      console.log(imgPrompts);
+      const list = await generateImgs(imgPrompts);
+      console.log("4");
 
-    jsonObjects.map((obj, i) => {
-      for (let key in obj) {
-        if (obj[key] === "Image") {
-          obj[key] = list[i];
-          return obj;
+      jsonObjects.map((obj, i) => {
+        for (let key in obj) {
+          if (obj[key] === "Image") {
+            obj[key] = list[i];
+            return obj;
+          }
         }
-      }
-    });
-    res.send(jsonObjects);
-  } catch (error) {
-    res.status(400).send(error.message);
+      });
+      res.send({ data: jsonObjects });
+    } catch (error) {
+      res.status(400).send(error.message);
+    }
   }
 
   // res.send(await list);
