@@ -79,7 +79,7 @@ app.post("/img", async (req, res) => {
       });
       res.send({ data: jsonObjects });
     } catch (error) {
-      res.status(400).send(error.message);
+      res.status(400).send({ error: error.message });
     }
   }
 });
