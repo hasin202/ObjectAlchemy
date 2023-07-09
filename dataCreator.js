@@ -12,10 +12,13 @@ async function generateJSONObjects(object, numberOfObjects, extraInfo) {
     const json = data.choices[0].message.content;
     return JSON.parse(json);
   } catch (error) {
-    console.log(error);
-    throw Error(
-      "Something went wrong in generating the objects. Please try again."
-    );
+    let msg = "";
+    if (error.response.data.error.code === "insufficient_quota")
+      msg =
+        "Oops. Looks like the openai API limit has been hit. Please try again later";
+    else
+      msg = "Something went wrong in generating the objects. Please try again.";
+    throw Error(msg);
   }
 }
 
