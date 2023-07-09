@@ -20,22 +20,38 @@ app.get("/", (req, res) => {
 app.post("/", async (req, res) => {
   const { object, number_of_objects, extra_info } = req.body;
 
-  try {
-    const jsonObjects = await generateJSONObjects(
-      object,
-      number_of_objects,
-      extra_info
-    );
-    res.json(jsonObjects);
-  } catch (error) {
-    res.status(400).send(error.message);
+  if (!object || !number_of_objects)
+    res.status(400).send({
+      error:
+        "Please make sure you pass in both the object schema, and the number of objects.",
+    });
+  else if (number_of_objects > 8)
+    res
+      .status(400)
+      .send({ error: "Please make sure number of objects is less than 8." });
+  else {
+    try {
+      const jsonObjects = await generateJSONObjects(
+        object,
+        number_of_objects,
+        extra_info
+      );
+      res.json(jsonObjects);
+    } catch (error) {
+      res.status(400).send(error.message);
+    }
   }
 });
 
 app.post("/img", async (req, res) => {
   const { object, number_of_objects, extra_info } = req.body;
 
-  if (number_of_objects > 8)
+  if (!object || !number_of_objects)
+    res.status(400).send({
+      error:
+        "Please make sure you pass in both the object schema, and the number of objects.",
+    });
+  else if (number_of_objects > 8)
     res
       .status(400)
       .send({ error: "Please make sure number of objects is less than 8." });
