@@ -66,8 +66,6 @@ app.post("/img", async (req, res) => {
       res.status(400).send(error.message);
     }
   }
-
-  // res.send(await list);
 });
 
 app.listen(PORT, () => {
