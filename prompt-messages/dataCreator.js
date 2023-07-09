@@ -35,21 +35,23 @@ const dataCreatorMessage = (object, numberOfObjects, extraInfo) => {
                       }
                     
                      You would return something like: 
-                     {
-                        id: c182b196-ff4e-436b-8e9b-4a97923003f9,
-                        "item_image":"Image",
-                        date:  2023-06-22
-                        time: 19:23:27
-                        inCart: true
-                        itemName: "cat food"
-                        price: 6.50,
-                        quantity: 2
-                        tags: [
-                          "pet",
-                          "pet food",
-                          "furry friend",
-                        ]
-                      }
+                     [
+                      {
+                          id: c182b196-ff4e-436b-8e9b-4a97923003f9,
+                          "item_image":"Image",
+                          date:  2023-06-22
+                          time: 19:23:27
+                          inCart: true
+                          itemName: "cat food"
+                          price: 6.50,
+                          quantity: 2
+                          tags: [
+                            "pet",
+                            "pet food",
+                            "furry friend",
+                          ]
+                        }
+                      ]
                    
                   Another example given a different object as input is:
                    
