@@ -34,32 +34,6 @@ app.post("/", async (req, res) => {
 
 app.post("/img", async (req, res) => {
   const { object, number_of_objects, extra_info } = req.body;
-  let jsonObjects, imgPrompts, list;
-
-  // try {
-  //   jsonObjects = await generateJSONObjects(
-  //     object,
-  //     number_of_objects,
-  //     extra_info
-  //   );
-  // } catch (error) {
-  //   res.status(400).send(error.message);
-  // }
-
-  // console.log(jsonObjects);
-  // try {
-  //   imgPrompts = await generateImgPrompt(jsonObjects);
-  // } catch (error) {
-  //   res.status(400).send(error.message);
-  // }
-
-  // console.log(imgPrompts);
-
-  // try {
-  //   list = await generateImgs(imgPrompts);
-  // } catch (error) {
-  //   res.status(400).send(error.message);
-  // }
 
   try {
     console.log("1");
@@ -70,7 +44,7 @@ app.post("/img", async (req, res) => {
     );
     console.log("2");
     const imgPrompts = await generateImgPrompt(jsonObjects);
-    console.log("3");
+    console.log(imgPrompts);
     const list = await generateImgs(imgPrompts);
     console.log("4");
 
