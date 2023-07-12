@@ -12,9 +12,10 @@ const generateImgPrompt = async (objects, img_info) => {
         return data.choices[0].message.content;
       } catch (error) {
         console.log(error);
-        throw Error(
-          "Something went wrong in generating the image prompts. Please try again."
-        );
+        throw {
+          code: error.response.status,
+          message: "Something went wrong in generating the objects",
+        };
       }
     })
   );
