@@ -38,7 +38,21 @@ app.post("/", async (req, res) => {
       );
       res.json(jsonObjects);
     } catch (error) {
-      res.status(400).send(error.message);
+      if (error.code) {
+        res.status(error.code).json({
+          error: {
+            ...error,
+            help: "https://platform.openai.com/docs/guides/error-codes/api-errors",
+            bad_req_help:
+              "A code of 400 suggests that one of the prompts is too long. Please either reduce the size of the object or try again",
+          },
+        });
+      } else {
+        res.status(400).json({
+          error:
+            "Something went wrong on our end. Try again, if this message keeps appearing then please wait and try again later",
+        });
+      }
     }
   }
 });
@@ -79,7 +93,21 @@ app.post("/img", async (req, res) => {
       });
       res.send({ data: jsonObjects });
     } catch (error) {
-      res.status(400).send({ error: error.message });
+      if (error.code) {
+        res.status(error.code).json({
+          error: {
+            ...error,
+            help: "https://platform.openai.com/docs/guides/error-codes/api-errors",
+            bad_req_help:
+              "A code of 400 suggests that one of the prompts is too long. Please either reduce the size of the object or try again",
+          },
+        });
+      } else {
+        res.status(400).json({
+          error:
+            "Something went wrong on our end. Try again, if this message keeps appearing then please wait and try again later",
+        });
+      }
     }
   }
 });
