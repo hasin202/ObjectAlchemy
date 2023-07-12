@@ -16,7 +16,7 @@ const generateImgs = async (arr) => {
         console.log(error);
         throw {
           code: error.response.status,
-          message: "Something went wrong in generating the objects",
+          message: "Something went wrong in generating the images",
         };
       }
     })

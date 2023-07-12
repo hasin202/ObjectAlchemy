@@ -14,7 +14,7 @@ const generateImgPrompt = async (objects, img_info) => {
         console.log(error);
         throw {
           code: error.response.status,
-          message: "Something went wrong in generating the objects",
+          message: "Something went wrong in generating the image prompts",
         };
       }
     })
