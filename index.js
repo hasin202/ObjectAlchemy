@@ -44,7 +44,7 @@ app.post("/", async (req, res) => {
 });
 
 app.post("/img", async (req, res) => {
-  const { object, number_of_objects, extra_info } = req.body;
+  const { object, number_of_objects, extra_info, img_info } = req.body;
 
   if (!object || !number_of_objects)
     res.status(400).send({
@@ -64,9 +64,9 @@ app.post("/img", async (req, res) => {
         extra_info
       );
       console.log("2");
-      const imgPrompts = await generateImgPrompt(jsonObjects);
+      const imgPrompts = await generateImgPrompt(jsonObjects, img_info);
       console.log(imgPrompts);
-      const list = await generateImgs(imgPrompts);
+      const list = await generateImgs(imgPrompts, img_info);
       console.log("4");
 
       jsonObjects.map((obj, i) => {
