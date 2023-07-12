@@ -1,4 +1,4 @@
-const imgPromptMessage = (object) => {
+const imgPromptMessage = (object, img_info) => {
   return [
     {
       role: "system",
@@ -12,7 +12,8 @@ const imgPromptMessage = (object) => {
       content: `Given the following object
                 ${JSON.stringify(object)}
                 Using information that you deem relevant, from the object, for generating a detailed image give me a prompt that when given to DALLE should generate me
-                a relevant image.`,
+                a relevant image. 
+                Extra info:${img_info}.`,
     },
   ];
 };
