@@ -64,7 +64,7 @@ You can expect the response to look something like:
 
 ## Image generation
 
-If for every object you would like a relevant image you can hit the `/img` endpoint which will use the generated objects to prompt the openai API to generate a relevant image. Furthermore, if you want the image to be in a certain style you can also pass in the property `img_info` in your request body
+If, for every object you would like a relevant image you can hit the `/img` endpoint which will use the generated objects to prompt the openai API to generate a relevant image. Furthermore, if you want the image to be in a certain style you can also pass in the property `img_info` in your request body
 
 ## Request body formatting for endpoints
 
