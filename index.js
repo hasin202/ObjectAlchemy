@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
 app.get("/", (req, res) => {
-  res.send(
+  res.json(
     "Oops. Looks like you sent a GET request. Please try again with a POST request instead."
   );
 });
