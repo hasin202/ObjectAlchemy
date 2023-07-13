@@ -1,5 +1,19 @@
 # ObjectAlchemy
 
+## Running locally
+
+Either clone or fork the repo then cd into the directory. Run `npm i` to install dependencies. Create a .env file and store your openai API key in here like:
+
+```
+OPENAI_API_KEY = "<YOUR KEY>"
+```
+
+Where in the place of `<YOUR KEY>` you put your API key. If you don't have a key but want to generate one please go to: https://platform.openai.com/account/api-keys
+
+Finally to run the project in your terminal run: `npm run dev`, and to hit the API use a tool like postman or anything similar.
+
+## Documentation
+
 This API will generate you an array of objects given just an example schema, with each object containg relevant information for your needs.
 
 For example if your request looks like
@@ -62,11 +76,11 @@ You can expect the response to look something like:
 ]
 ```
 
-## Image generation
+### Image generation
 
 If, for every object you would like a relevant image you can hit the `/img` endpoint which will use the generated objects to prompt the openai API to generate a relevant image. Furthermore, if you want the image to be in a certain style you can also pass in the property `img_info` in your request body
 
-## Request body formatting for endpoints
+### Request body formatting for endpoints
 
 Request body format for `/` endpoint:
 
